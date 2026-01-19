@@ -9,7 +9,60 @@
 #include <dt-bindings/zmk/bt.h>
 
 / {
+    /* ************************************************************************************
+     * MACROS & BEHAVIORS
+     ************************************************************************************ */
+    
+    macros {
+        /* Git Macros */
+        git_cmt: git_commit_macro {
+            compatible = "zmk,behavior-macro";
+            #binding-cells = <0>;
+            /* Types: git commit -m "" and moves cursor left */
+            bindings = <&kp G &kp I &kp T &kp SPACE &kp C &kp O &kp M &kp M &kp I &kp T &kp SPACE &kp MINUS &kp M &kp SPACE &kp DQT &kp DQT &kp LEFT>;
+        };
+        git_st: git_status_macro {
+            compatible = "zmk,behavior-macro";
+            #binding-cells = <0>;
+            /* Types: git status [Enter] */
+            bindings = <&kp G &kp I &kp T &kp SPACE &kp S &kp T &kp A &kp T &kp U &kp S &kp RET>;
+        };
+        git_add: git_add_macro {
+            compatible = "zmk,behavior-macro";
+            #binding-cells = <0>;
+            /* Types: git add . [Enter] */
+            bindings = <&kp G &kp I &kp T &kp SPACE &kp A &kp D &kp D &kp SPACE &kp DOT &kp RET>;
+        };
+        git_psh: git_push_macro {
+            compatible = "zmk,behavior-macro";
+            #binding-cells = <0>;
+            /* Types: git push [Enter] */
+            bindings = <&kp G &kp I &kp T &kp SPACE &kp P &kp U &kp S &kp H &kp RET>;
+        };
+
+        /* Language Print Macros */
+        kt_log: kotlin_print {
+            compatible = "zmk,behavior-macro";
+            #binding-cells = <0>;
+            /* Types: println("") and moves cursor */
+            bindings = <&kp P &kp R &kp I &kp N &kp T &kp L &kp N &kp LPAR &kp DQT &kp DQT &kp RPAR &kp LEFT &kp LEFT>;
+        };
+        js_log: js_print {
+            compatible = "zmk,behavior-macro";
+            #binding-cells = <0>;
+            /* Types: console.log("") and moves cursor */
+            bindings = <&kp C &kp O &kp N &kp S &kp O &kp L &kp E &kp DOT &kp L &kp O &kp G &kp LPAR &kp DQT &kp DQT &kp RPAR &kp LEFT &kp LEFT>;
+        };
+        rs_log: rust_print {
+            compatible = "zmk,behavior-macro";
+            #binding-cells = <0>;
+            /* Types: println!("{:?}", ); and moves cursor */
+            bindings = <&kp P &kp R &kp I &kp N &kp T &kp L &kp N &kp EXCL &kp LPAR &kp DQT &kp LBRC &kp COLON &kp QMARK &kp RBRC &kp DQT &kp COMMA &kp SPACE &kp RPAR &kp SEMI &kp LEFT &kp LEFT>;
+        };
+    };
+
     behaviors {
+        /* Home Row Mods: Tap for char, Hold for modifier */
         hm: homerow_mods {
             compatible = "zmk,behavior-hold-tap";
             label = "HOMEROW_MODS";
@@ -25,7 +78,7 @@
         compatible = "zmk,combos";
         combo_esc {
             timeout-ms = <50>;
-            key-positions = <19 20>; /* Posiciones de J y K en el Corne */
+            key-positions = <19 20>; /* J + K = ESC */
             bindings = <&kp ESC>;
         };
     };
@@ -38,13 +91,17 @@
         };
     };
 
+    /* ************************************************************************************
+     * KEYMAP
+     ************************************************************************************ */
+    
     keymap {
         compatible = "zmk,keymap";
 
-        /* * LAYER 0: DEFAULT (MAC)
-         * Left thumb: GUI (Command)
-         * Home Row: A(Shift) S(Ctrl) D(Alt) F(Cmd)
-         */
+        /* --------------------------------------------------------------------------------
+         * LAYER 0: DEFAULT (MAC MODE)
+         * Thumb: GUI (Command)
+         * -------------------------------------------------------------------------------- */
         default_layer {
             bindings = <
                 &kp TAB    &kp Q       &kp W       &kp E       &kp R       &kp T         &kp Y       &kp U       &kp I       &kp O       &kp P          &kp BSPC
@@ -54,10 +111,10 @@
             >;
         };
 
-        /* * LAYER 1: LINUX MODE
-         * Left thumb: CTRL
-         * Manually activated from the ADJUST layer
-         */
+        /* --------------------------------------------------------------------------------
+         * LAYER 1: LINUX MODE (Activated via Adjust Layer)
+         * Thumb: CTRL
+         * -------------------------------------------------------------------------------- */
         linux_layer {
             bindings = <
                 &kp TAB    &kp Q       &kp W       &kp E       &kp R       &kp T         &kp Y       &kp U       &kp I       &kp O       &kp P          &kp BSPC
@@ -67,34 +124,67 @@
             >;
         };
 
-        /* LAYER 2: LOWER */
+        /* --------------------------------------------------------------------------------
+         * LAYER 2: LOWER (Navigation, Numbers & IDE Shortcuts)
+         * Left Side: JetBrains shortcuts (Top) & Nav (Bottom)
+         * Right Side: Numbers & VIM Arrows
+         * -------------------------------------------------------------------------------- */
         lower_layer {
             bindings = <
-                &kp TAB    &kp N1 &kp N2 &kp N3 &kp N4 &kp N5    &kp N6   &kp N7   &kp N8   &kp N9    &kp N0 &kp BSPC
-                &trans     &trans &trans &trans &trans &trans    &kp LEFT &kp UP   &kp DOWN &kp RIGHT &trans &trans
-                &kp LSHFT  &trans &trans &trans &trans &trans    &trans   &trans   &trans   &trans    &trans &trans
-                                         &kp LGUI &trans &kp RET &kp SPACE &trans &kp RALT
+                &kp TAB       &kp LG(B)    &kp LG(LBKT) &kp LG(RBKT) &kp LG(LS(F)) &trans        &kp N1   &kp N2   &kp N3   &kp N4    &kp N5 &kp BSPC
+                &trans        &trans       &trans       &trans       &trans        &trans        &kp LEFT &kp DOWN &kp UP   &kp RIGHT &trans &trans
+                &kp LSHFT     &kp HOME     &kp PG_DN    &kp PG_UP    &kp END       &trans        &kp N6   &kp N7   &kp N8   &kp N9    &kp N0 &trans
+                                           &kp LGUI     &trans       &kp RET                     &kp SPACE &trans &kp RALT
             >;
+            /* JetBrains Map (Left):
+             * Q (Cmd+B): Go to Declaration
+             * W (Cmd+[): Back
+             * E (Cmd+]): Forward
+             * R (Cmd+Shift+F): Find in Path
+             * Z/X/C/V: Home, PgDn, PgUp, End (Below home row)
+             */
         };
 
-        /* LAYER 3: RAISE */
+        /* --------------------------------------------------------------------------------
+         * LAYER 3: RAISE (Symbols Optimized)
+         * Symmetrical brackets for easy coding
+         * -------------------------------------------------------------------------------- */
         raise_layer {
             bindings = <
-                &kp TAB   &kp EXCL &kp AT &kp HASH &kp DLLR &kp PRCNT   &kp CARET &kp AMPS  &kp ASTRK &kp LPAR &kp RPAR &kp BSPC
-                &kp LCTRL &trans   &trans &trans   &trans   &trans      &kp MINUS &kp EQUAL &kp LBKT  &kp RBKT &kp BSLH &kp GRAVE
-                &kp LSHFT &trans   &trans &trans   &trans   &trans      &kp UNDER &kp PLUS  &kp LBRC  &kp RBRC &kp PIPE &kp TILDE
-                                   &kp LGUI &trans   &kp RET            &kp SPACE   &trans    &kp RALT
+                &kp TAB   &kp EXCL &kp AT   &kp HASH &kp DLLR &kp PRCNT     &kp CARET &kp AMPS  &kp ASTRK &kp LPAR &kp RPAR &kp BSPC
+                &kp LCTRL &trans   &trans   &trans   &trans   &trans        &kp MINUS &kp EQUAL &kp LBKT  &kp RBKT &kp BSLH &kp GRAVE
+                &kp LSHFT &trans   &kp LBRC &kp RBRC &trans   &trans        &kp UNDER &kp PLUS  &kp LBRC  &kp RBRC &kp PIPE &kp TILDE
+                                   &kp LGUI &trans   &kp RET                &kp SPACE &trans    &kp RALT
             >;
+            /* Note:
+             * Parentheses: Top row (standard)
+             * Brackets []: Home row J/K (Right) or matched
+             * Braces {}: Bottom row X/C (Left) and M/, (Right) - Adjusted for symmetry
+             */
         };
 
-        /* LAYER 4: ADJUST */
+        /* --------------------------------------------------------------------------------
+         * LAYER 4: ADJUST (Config, Git Macros, Languages & Media)
+         * Activated by holding LOWER + RAISE
+         * -------------------------------------------------------------------------------- */
         adjust_layer {
             bindings = <
-                &to 0      &to 1        &trans       &trans       &trans       &trans         &trans &trans     &trans     &trans   &trans &trans
-                &bt BT_CLR &bt BT_SEL 0 &bt BT_SEL 1 &bt BT_SEL 2 &bt BT_SEL 3 &bt BT_SEL 4   &trans &kp C_PREV &kp C_PP   &kp C_NEXT  &trans &trans
-                &trans     &trans       &trans       &trans       &trans       &trans         &trans &trans     &trans     &trans   &trans &trans
-                                                     &kp LGUI &trans &kp RET                  &kp SPACE &trans &kp RALT
+                &to 0      &to 1        &trans       &rs_log      &trans       &trans         &git_st &git_add   &git_cmt   &git_psh &trans &trans
+                &bt BT_CLR &bt BT_SEL 0 &bt BT_SEL 1 &kt_log      &js_log      &trans         &trans  &kp C_PREV &kp C_NEXT &kp C_PP &trans &trans
+                &trans     &trans       &trans       &trans       &trans       &trans         &trans  &trans     &trans     &trans   &trans &trans
+                                                     &kp LGUI     &trans       &kp RET        &kp SPACE &trans   &kp RALT
             >;
+            /* Adjust Map:
+             * TAB/Q: OS Switch
+             * E: Rust Println
+             * D: Kotlin Println
+             * F: JS Console.log
+             * * U: Git Status
+             * I: Git Add .
+             * O: Git Commit -m ""
+             * P: Git Push
+             * * H/J/K: Music Controls
+             */
         };
     };
 };
