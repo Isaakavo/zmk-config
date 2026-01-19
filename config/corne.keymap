@@ -10,54 +10,90 @@
 
 / {
     /* ************************************************************************************
-     * MACROS & BEHAVIORS
+     * MACROS
      ************************************************************************************ */
     
     macros {
-        /* Git Macros */
-        git_cmt: git_commit_macro {
+        /* * KOTLIN LAMBDA: {  ->  }
+         * Types the structure and moves cursor back before the arrow.
+         * Final position: { | -> }
+         */
+        kt_lam: kotlin_lambda {
             compatible = "zmk,behavior-macro";
             #binding-cells = <0>;
-            /* Types: git commit -m "" and moves cursor left */
+            bindings = <&kp LBRC &kp SPACE &kp SPACE &kp MINUS &kp GT &kp SPACE &kp RBRC &kp LEFT &kp LEFT &kp LEFT &kp LEFT &kp LEFT>;
+        };
+
+        /* * KOTLIN FUNCTION (IMPROVED)
+         * Types: fun () { } with a newline.
+         * Moves cursor back to naming position.
+         * Final position: fun |() { 
+         */
+        kt_fun: fun_keyword {
+            compatible = "zmk,behavior-macro";
+            #binding-cells = <0>;
+            bindings = <&kp F &kp U &kp N &kp SPACE &kp LPAR &kp RPAR &kp SPACE &kp LBRC &kp RET &kp RBRC &kp UP &kp LEFT &kp LEFT &kp LEFT &kp LEFT>;
+        };
+
+        /* JS/General Arrow: => */
+        js_arr: js_arrow {
+            compatible = "zmk,behavior-macro";
+            #binding-cells = <0>;
+            bindings = <&kp EQUAL &kp GT>;
+        };
+
+        /* Kotlin Safe Call: ?. */
+        kt_safe: safe_call {
+            compatible = "zmk,behavior-macro";
+            #binding-cells = <0>;
+            bindings = <&kp QMARK &kp DOT>;
+        };
+
+        /* Kotlin Elvis Operator: ?: */
+        kt_elvis: elvis_op {
+            compatible = "zmk,behavior-macro";
+            #binding-cells = <0>;
+            bindings = <&kp QMARK &kp COLON>;
+        };
+
+        /* Val keyword */
+        kt_val: val_keyword {
+            compatible = "zmk,behavior-macro";
+            #binding-cells = <0>;
+            bindings = <&kp V &kp A &kp L &kp SPACE>;
+        };
+        
+        /* Var keyword */
+        kt_var: var_keyword {
+            compatible = "zmk,behavior-macro";
+            #binding-cells = <0>;
+            bindings = <&kp V &kp A &kp R &kp SPACE>;
+        };
+
+        /* Git Macros */
+        git_cmt: git_commit {
+            compatible = "zmk,behavior-macro";
+            #binding-cells = <0>;
+            /* Types: git commit -m "" and places cursor inside quotes */
             bindings = <&kp G &kp I &kp T &kp SPACE &kp C &kp O &kp M &kp M &kp I &kp T &kp SPACE &kp MINUS &kp M &kp SPACE &kp DQT &kp DQT &kp LEFT>;
         };
-        git_st: git_status_macro {
+        git_st: git_status {
             compatible = "zmk,behavior-macro";
             #binding-cells = <0>;
             /* Types: git status [Enter] */
             bindings = <&kp G &kp I &kp T &kp SPACE &kp S &kp T &kp A &kp T &kp U &kp S &kp RET>;
         };
-        git_add: git_add_macro {
+        git_add: git_add {
             compatible = "zmk,behavior-macro";
             #binding-cells = <0>;
             /* Types: git add . [Enter] */
             bindings = <&kp G &kp I &kp T &kp SPACE &kp A &kp D &kp D &kp SPACE &kp DOT &kp RET>;
         };
-        git_psh: git_push_macro {
+        git_psh: git_push {
             compatible = "zmk,behavior-macro";
             #binding-cells = <0>;
             /* Types: git push [Enter] */
             bindings = <&kp G &kp I &kp T &kp SPACE &kp P &kp U &kp S &kp H &kp RET>;
-        };
-
-        /* Language Print Macros */
-        kt_log: kotlin_print {
-            compatible = "zmk,behavior-macro";
-            #binding-cells = <0>;
-            /* Types: println("") and moves cursor */
-            bindings = <&kp P &kp R &kp I &kp N &kp T &kp L &kp N &kp LPAR &kp DQT &kp DQT &kp RPAR &kp LEFT &kp LEFT>;
-        };
-        js_log: js_print {
-            compatible = "zmk,behavior-macro";
-            #binding-cells = <0>;
-            /* Types: console.log("") and moves cursor */
-            bindings = <&kp C &kp O &kp N &kp S &kp O &kp L &kp E &kp DOT &kp L &kp O &kp G &kp LPAR &kp DQT &kp DQT &kp RPAR &kp LEFT &kp LEFT>;
-        };
-        rs_log: rust_print {
-            compatible = "zmk,behavior-macro";
-            #binding-cells = <0>;
-            /* Types: println!("{:?}", ); and moves cursor */
-            bindings = <&kp P &kp R &kp I &kp N &kp T &kp L &kp N &kp EXCL &kp LPAR &kp DQT &kp LBRC &kp COLON &kp QMARK &kp RBRC &kp DQT &kp COMMA &kp SPACE &kp RPAR &kp SEMI &kp LEFT &kp LEFT>;
         };
     };
 
@@ -76,32 +112,27 @@
 
     combos {
         compatible = "zmk,combos";
+        /* J + K = ESC */
         combo_esc {
             timeout-ms = <50>;
-            key-positions = <19 20>; /* J + K = ESC */
+            key-positions = <19 20>;
             bindings = <&kp ESC>;
         };
     };
 
     conditional_layers {
         compatible = "zmk,conditional-layers";
+        /* Tri-layer: Lower + Raise = Adjust */
         tri_layer {
             if-layers = <2 3>;
             then-layer = <4>;
         };
     };
 
-    /* ************************************************************************************
-     * KEYMAP
-     ************************************************************************************ */
-    
     keymap {
         compatible = "zmk,keymap";
 
-        /* --------------------------------------------------------------------------------
-         * LAYER 0: DEFAULT (MAC MODE)
-         * Thumb: GUI (Command)
-         * -------------------------------------------------------------------------------- */
+        /* LAYER 0: DEFAULT (MAC MODE) */
         default_layer {
             bindings = <
                 &kp TAB    &kp Q       &kp W       &kp E       &kp R       &kp T         &kp Y       &kp U       &kp I       &kp O       &kp P          &kp BSPC
@@ -111,10 +142,7 @@
             >;
         };
 
-        /* --------------------------------------------------------------------------------
-         * LAYER 1: LINUX MODE (Activated via Adjust Layer)
-         * Thumb: CTRL
-         * -------------------------------------------------------------------------------- */
+        /* LAYER 1: LINUX MODE (Swaps thumb to Ctrl) */
         linux_layer {
             bindings = <
                 &kp TAB    &kp Q       &kp W       &kp E       &kp R       &kp T         &kp Y       &kp U       &kp I       &kp O       &kp P          &kp BSPC
@@ -124,11 +152,7 @@
             >;
         };
 
-        /* --------------------------------------------------------------------------------
-         * LAYER 2: LOWER (Navigation, Numbers & IDE Shortcuts)
-         * Left Side: JetBrains shortcuts (Top) & Nav (Bottom)
-         * Right Side: Numbers & VIM Arrows
-         * -------------------------------------------------------------------------------- */
+        /* LAYER 2: LOWER (Navigation, Numbers & IDE Shortcuts) */
         lower_layer {
             bindings = <
                 &kp TAB       &kp LG(B)    &kp LG(LBKT) &kp LG(RBKT) &kp LG(LS(F)) &trans        &kp N1   &kp N2   &kp N3   &kp N4    &kp N5 &kp BSPC
@@ -136,19 +160,15 @@
                 &kp LSHFT     &kp HOME     &kp PG_DN    &kp PG_UP    &kp END       &trans        &kp N6   &kp N7   &kp N8   &kp N9    &kp N0 &trans
                                            &kp LGUI     &trans       &kp RET                     &kp SPACE &trans &kp RALT
             >;
-            /* JetBrains Map (Left):
-             * Q (Cmd+B): Go to Declaration
-             * W (Cmd+[): Back
-             * E (Cmd+]): Forward
-             * R (Cmd+Shift+F): Find in Path
-             * Z/X/C/V: Home, PgDn, PgUp, End (Below home row)
+            /* JetBrains Shortcuts (Left Hand):
+             * Q: Go to Declaration (Cmd+B)
+             * W: Back (Cmd+[)
+             * E: Forward (Cmd+])
+             * R: Find in Path (Cmd+Shift+F)
              */
         };
 
-        /* --------------------------------------------------------------------------------
-         * LAYER 3: RAISE (Symbols Optimized)
-         * Symmetrical brackets for easy coding
-         * -------------------------------------------------------------------------------- */
+        /* LAYER 3: RAISE (Symbols Optimized) */
         raise_layer {
             bindings = <
                 &kp TAB   &kp EXCL &kp AT   &kp HASH &kp DLLR &kp PRCNT     &kp CARET &kp AMPS  &kp ASTRK &kp LPAR &kp RPAR &kp BSPC
@@ -156,34 +176,32 @@
                 &kp LSHFT &trans   &kp LBRC &kp RBRC &trans   &trans        &kp UNDER &kp PLUS  &kp LBRC  &kp RBRC &kp PIPE &kp TILDE
                                    &kp LGUI &trans   &kp RET                &kp SPACE &trans    &kp RALT
             >;
-            /* Note:
-             * Parentheses: Top row (standard)
-             * Brackets []: Home row J/K (Right) or matched
-             * Braces {}: Bottom row X/C (Left) and M/, (Right) - Adjusted for symmetry
-             */
         };
 
-        /* --------------------------------------------------------------------------------
-         * LAYER 4: ADJUST (Config, Git Macros, Languages & Media)
-         * Activated by holding LOWER + RAISE
-         * -------------------------------------------------------------------------------- */
+        /* LAYER 4: ADJUST (Code Macros, OS Switch, & Media) */
         adjust_layer {
+            /* * Programming Optimized Layout:
+             * Top Row:    BT Controls (Moved here to clear home row)
+             * Middle Row: Kotlin/Code Macros (Left) | Media/Nav (Right)
+             * Bottom Row: OS Switch & Variables
+             */
             bindings = <
-                &to 0      &to 1        &trans       &rs_log      &trans       &trans         &git_st &git_add   &git_cmt   &git_psh &trans &trans
-                &bt BT_CLR &bt BT_SEL 0 &bt BT_SEL 1 &kt_log      &js_log      &trans         &trans  &kp C_PREV &kp C_NEXT &kp C_PP &trans &trans
-                &trans     &trans       &trans       &trans       &trans       &trans         &trans  &trans     &trans     &trans   &trans &trans
+                &bt BT_CLR &bt BT_SEL 0 &bt BT_SEL 1 &bt BT_SEL 2 &bt BT_SEL 3 &bt BT_SEL 4   &git_st &git_add   &git_cmt   &git_psh &trans &trans
+                &trans     &kt_val      &kt_safe     &kt_lam      &kt_fun      &js_arr        &trans  &kp C_PREV &kp C_NEXT &kp C_PP &trans &trans
+                &to 0      &to 1        &kt_var      &kt_elvis    &trans       &trans         &trans  &trans     &trans     &trans   &trans &trans
                                                      &kp LGUI     &trans       &kp RET        &kp SPACE &trans   &kp RALT
             >;
-            /* Adjust Map:
-             * TAB/Q: OS Switch
-             * E: Rust Println
-             * D: Kotlin Println
-             * F: JS Console.log
-             * * U: Git Status
-             * I: Git Add .
-             * O: Git Commit -m ""
-             * P: Git Push
-             * * H/J/K: Music Controls
+            /* * MACRO KEYMAP (Left Hand):
+             * Middle Row:
+             * S (Ring):   ?. (Safe Call)
+             * D (Middle): { -> } (Smart Lambda)
+             * F (Index):  fun () {} (Smart Function)
+             * G (Inner):  => (JS Arrow)
+             * Bottom Row:
+             * TAB: Mac Mode
+             * Q:   Linux Mode
+             * W:   var
+             * E:   ?: (Elvis)
              */
         };
     };
