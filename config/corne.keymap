@@ -97,30 +97,6 @@
         };
     };
 
-    behaviors {
-        /* Home Row Mods: Tap for char, Hold for modifier */
-        hm: homerow_mods {
-            compatible = "zmk,behavior-hold-tap";
-            label = "HOMEROW_MODS";
-            #binding-cells = <2>;
-            tapping-term-ms = <150>;
-            quick-tap-ms = <155>;
-            require-prior-idle-ms = <115>;
-            flavor = "tap-preferred";
-            bindings = <&kp>, <&kp>;
-        };
-    };
-
-    combos {
-        compatible = "zmk,combos";
-        /* J + K = ESC */
-        combo_esc {
-            timeout-ms = <50>;
-            key-positions = <19 20>;
-            bindings = <&kp ESC>;
-        };
-    };
-
     conditional_layers {
         compatible = "zmk,conditional-layers";
         /* Tri-layer: Lower + Raise = Adjust */
@@ -136,20 +112,20 @@
         /* LAYER 0: DEFAULT (MAC MODE) */
         default_layer {
             bindings = <
-                &kp TAB    &kp Q       &kp W       &kp E       &kp R       &kp T         &kp Y       &kp U       &kp I       &kp O       &kp P          &kp BSPC
-                &kp LCTRL  &hm LSHFT A &hm LCTRL S &hm LALT D  &hm LGUI F  &kp G         &kp H       &hm RGUI J  &hm RALT K  &hm RCTRL L &hm RSHFT SEMI &kp SQT
-                &kp LSHFT  &kp Z       &kp X       &kp C       &kp V       &kp B         &kp N       &kp M       &kp COMMA   &kp DOT     &kp FSLH       &kp ESC
-                                       &kp LGUI    &mo 2       &kp RET                   &kp SPACE   &mo 3       &kp RALT
+                &kp TAB    &kp Q  &kp W  &kp E  &kp R  &kp T     &kp Y  &kp U  &kp I      &kp O    &kp P     &kp BSPC
+                &kp LCTRL  &kp A  &kp S  &kp D  &kp F  &kp G     &kp H  &kp J  &kp K      &kp L    &kp SEMI  &kp SQT
+                &kp LSHFT  &kp Z  &kp X  &kp C  &kp V  &kp B     &kp N  &kp M  &kp COMMA  &kp DOT  &kp FSLH  &kp ESC
+                                  &kp LGUI &mo 2 &kp RET         &kp SPACE &mo 3 &kp RALT
             >;
         };
 
         /* LAYER 1: LINUX MODE (Swaps thumb to Ctrl) */
         linux_layer {
             bindings = <
-                &kp TAB    &kp Q       &kp W       &kp E       &kp R       &kp T         &kp Y       &kp U       &kp I       &kp O       &kp P          &kp BSPC
-                &kp LGUI   &hm LSHFT A &hm LCTRL S &hm LALT D  &hm LGUI F  &kp G         &kp H       &hm RGUI J  &hm RALT K  &hm RCTRL L &hm RSHFT SEMI &kp SQT
-                &kp LSHFT  &kp Z       &kp X       &kp C       &kp V       &kp B         &kp N       &kp M       &kp COMMA   &kp DOT     &kp FSLH       &kp ESC
-                                       &kp LCTRL   &mo 2       &kp RET                   &kp SPACE   &mo 3       &kp RALT
+                &kp TAB    &kp Q  &kp W  &kp E  &kp R  &kp T     &kp Y  &kp U  &kp I      &kp O    &kp P     &kp BSPC
+                &kp LGUI   &kp A  &kp S  &kp D  &kp F  &kp G     &kp H  &kp J  &kp K      &kp L    &kp SEMI  &kp SQT
+                &kp LSHFT  &kp Z  &kp X  &kp C  &kp V  &kp B     &kp N  &kp M  &kp COMMA  &kp DOT  &kp FSLH  &kp ESC
+                                  &kp LCTRL &mo 2 &kp RET        &kp SPACE &mo 3 &kp RALT
             >;
         };
 
