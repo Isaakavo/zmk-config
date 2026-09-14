@@ -55,7 +55,21 @@ borrar tambien la entrada del lado del host con `bluetoothctl remove <MAC>`.
 Sintoma: `device not accepting address, error -71`, o intentos repetidos de
 `new full-speed USB device` que nunca llegan a `Product:`.
 
-Antes de sospechar del firmware, **prueba otro puerto USB fisico**. Comprueba
-en `journalctl -k` que la ruta del puerto cambia de verdad (`usb 1-5` ->
-`usb 1-6`); si sigue apareciendo la misma, no cambiaste de puerto. Eso fue
-exactamente lo que pasó aqui, y costo un buen rato de diagnostico equivocado.
+La causa mas probable es **la bateria muy descargada**. La mitad izquierda es
+la central y consume mas, asi que es la que suele quedarse sin carga. Cuando
+la LiPo esta muy baja, el circuito de carga tira de corriente y el riel de
+3.3 V se hunde justo durante la negociacion USB, de modo que el MCU se
+reinicia a mitad de la enumeracion.
+
+**Dejala enchufada diez minutos sin tocarla.** Nada de doble toque ni de
+desconectar para reintentar: cada reinicio interrumpe la carga y reinicia el
+problema. Es lo contrario de lo que pide el instinto.
+
+El 2026-09-13 esto costo media hora de diagnostico equivocado: se probo otro
+cable y otro puerto, y la mitad acabo enumerando sola en el puerto original
+seis minutos despues del primer fallo. Ni el cable ni el puerto tenian nada;
+solo hizo falta tiempo de carga. Un LED parpadeando con la placa a bateria es
+consistente con aviso de carga baja.
+
+Solo si tras esos diez minutos sigue igual, mira el cable, el puerto y el
+conector micro-USB de la placa.
