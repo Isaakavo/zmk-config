@@ -189,7 +189,11 @@ CONFIG_NICE_VIEW_GEM_ANIMATION_FRAME=8
 CONFIG_ZMK_RGB_UNDERGLOW=y
 CONFIG_ZMK_RGB_UNDERGLOW_ON_START=n
 CONFIG_ZMK_RGB_UNDERGLOW_AUTO_OFF_IDLE=y
-CONFIG_ZMK_RGB_UNDERGLOW_AUTO_OFF_USB=y</pre>
+CONFIG_ZMK_RGB_UNDERGLOW_AUTO_OFF_USB=y
+
+<span class="cm"># Sin esto, apagar el RGB corta el riel VCC y la pantalla no enciende</span>
+CONFIG_ZMK_RGB_UNDERGLOW_EXT_POWER=n</pre>
+  <div class="tip" style="margin-top:14px"><b>El nice!view y los LEDs comparten el riel VCC conmutado.</b> Por defecto ZMK acopla el encendido del underglow a ese riel, asi que apagar el RGB apagaria tambien la pantalla. <code>EXT_POWER=n</code> los desacopla: el riel queda siempre alimentado y el RGB solo controla los LEDs.</div>
 </section>
 
 <section>
