@@ -1,0 +1,308 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mi layout Corne</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Chivo:wght@700;900&family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+  :root{
+    --bg:#EBEDEA; --surface:#FAFBF9; --plate:#F1F3EF;
+    --cap:#E0E4DE; --cap-top:#F4F6F2; --cap-edge:#C8CDC5;
+    --ink:#161A18; --ink-2:#3E4643; --muted:#6D7672; --hair:#D3D8D0;
+    --accent:#C8841B;
+    --mod:#3F7391; --nav:#2E8C7A; --sym:#7A5FAE; --sys:#BE414F;
+    --shadow:0 1px 0 var(--cap-edge), 0 2px 4px rgba(20,28,24,.10);
+  }
+  @media (prefers-color-scheme:dark){
+    :root:not([data-theme="light"]){
+      --bg:#101413; --surface:#171C1A; --plate:#1B2220;
+      --cap:#242B28; --cap-top:#2C3431; --cap-edge:#0C100F;
+      --ink:#E7ECE9; --ink-2:#B4BDB8; --muted:#818C87; --hair:#2A3230;
+      --accent:#E3A741;
+      --mod:#68A8C8; --nav:#4FBFA6; --sym:#A992D8; --sys:#E4737F;
+      --shadow:0 1px 0 var(--cap-edge), 0 2px 5px rgba(0,0,0,.45);
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#101413; --surface:#171C1A; --plate:#1B2220;
+    --cap:#242B28; --cap-top:#2C3431; --cap-edge:#0C100F;
+    --ink:#E7ECE9; --ink-2:#B4BDB8; --muted:#818C87; --hair:#2A3230;
+    --accent:#E3A741;
+    --mod:#68A8C8; --nav:#4FBFA6; --sym:#A992D8; --sys:#E4737F;
+    --shadow:0 1px 0 var(--cap-edge), 0 2px 5px rgba(0,0,0,.45);
+  }
+
+  *{box-sizing:border-box}
+  body{
+    background:var(--bg); color:var(--ink);
+    font-family:"IBM Plex Sans",system-ui,-apple-system,sans-serif;
+    line-height:1.55; margin:0; padding:0 20px 80px; -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:1020px; margin:0 auto}
+  h1,h2,h3{font-family:Chivo,system-ui,sans-serif; text-wrap:balance; margin:0}
+  code,.mono{font-family:"IBM Plex Mono",ui-monospace,monospace}
+
+  header{padding:56px 0 28px; border-bottom:2px solid var(--ink); margin-bottom:34px}
+  .eyebrow{font-family:"IBM Plex Mono",monospace; font-size:11px; font-weight:500;
+    letter-spacing:.16em; text-transform:uppercase; color:var(--accent); margin-bottom:14px}
+  h1{font-size:clamp(34px,6vw,58px); font-weight:900; letter-spacing:-.025em; line-height:1}
+  .sub{color:var(--ink-2); font-size:17px; max-width:60ch; margin-top:16px}
+  .meta{display:flex; flex-wrap:wrap; gap:8px 26px; margin-top:24px;
+    font-family:"IBM Plex Mono",monospace; font-size:12px; color:var(--muted)}
+  .meta b{color:var(--ink-2); font-weight:500}
+
+  section{margin-bottom:46px}
+  h2{font-size:13px; font-weight:700; letter-spacing:.13em; text-transform:uppercase;
+    color:var(--muted); padding-bottom:9px; border-bottom:1px solid var(--hair); margin-bottom:22px}
+
+  .legend{display:flex; flex-wrap:wrap; gap:9px}
+  .lg{display:inline-flex; align-items:center; gap:7px; font-size:12px; color:var(--ink-2);
+    background:var(--surface); border:1px solid var(--hair); border-radius:2px; padding:5px 11px 5px 7px}
+  .sw{width:11px; height:11px; border-radius:2px; flex:none}
+
+  .layer{background:var(--plate); border:1px solid var(--hair); border-radius:4px; overflow:hidden; margin-bottom:22px}
+  .lhead{display:flex; align-items:baseline; gap:14px; flex-wrap:wrap; padding:15px 20px;
+    border-bottom:1px solid var(--hair); background:var(--surface)}
+  .lnum{font-family:Chivo,sans-serif; font-weight:900; font-size:12px; letter-spacing:.04em;
+    background:var(--ink); color:var(--bg); border-radius:2px; padding:3px 8px; flex:none}
+  .lname{font-family:Chivo,sans-serif; font-weight:700; font-size:19px; letter-spacing:-.01em}
+  .lhow{font-family:"IBM Plex Mono",monospace; font-size:11.5px; color:var(--muted); margin-left:auto}
+  .lhow b{color:var(--accent); font-weight:600}
+
+  .scroll{overflow-x:auto}
+  .board{display:flex; gap:clamp(14px,4vw,54px); justify-content:center;
+    padding:24px 16px 8px; min-width:min-content; --kw:60px}
+  @media(max-width:780px){.board{--kw:52px}}
+  .half{display:flex; flex-direction:column; gap:5px}
+  .row{display:grid; grid-template-columns:repeat(6,var(--kw)); gap:5px}
+  .thumbs{display:flex; gap:5px; margin-top:7px}
+  .half.L .thumbs{justify-content:flex-end; padding-right:calc(var(--kw)*.5)}
+  .half.R .thumbs{justify-content:flex-start; padding-left:calc(var(--kw)*.5)}
+
+  .key{width:var(--kw); height:var(--kw); border-radius:4px; position:relative;
+    background:var(--cap); border:1px solid var(--cap-edge); box-shadow:var(--shadow);
+    display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1px;
+    padding:3px 2px; overflow:hidden}
+  .key::before{content:""; position:absolute; inset:2px 2px auto 2px; height:42%;
+    background:var(--cap-top); border-radius:3px 3px 6px 6px; opacity:.7}
+  .key span{position:relative; z-index:1; text-align:center; line-height:1.1}
+  .k-main{font-family:"IBM Plex Mono",monospace; font-size:13px; font-weight:600;
+    color:var(--ink); letter-spacing:-.02em}
+  .k-main.sm{font-size:10.5px} .k-main.xs{font-size:9px}
+  .k-sub{font-size:7.5px; color:var(--muted); letter-spacing:.02em; text-transform:uppercase; font-weight:500}
+
+  .key.c-mod .k-main{color:var(--mod)} .key.c-nav .k-main{color:var(--nav)}
+  .key.c-sym .k-main{color:var(--sym)} .key.c-sys .k-main{color:var(--sys)}
+  .key.c-lay .k-main{color:var(--accent)} .key.c-lay{border-color:var(--accent)}
+  .key.c-trans{opacity:.34}
+  .key.c-trans .k-main{color:var(--muted); font-size:15px}
+  .key.held{background:var(--accent); border-color:var(--accent)}
+  .key.held .k-main,.key.held .k-sub{color:var(--bg)}
+  .key.held::before{opacity:.14}
+
+  .lnotes{padding:4px 20px 18px; display:flex; flex-direction:column; gap:7px}
+  .note{display:flex; gap:9px; font-size:13px; color:var(--ink-2); align-items:baseline}
+  .note::before{content:"—"; color:var(--accent); flex:none; font-weight:600}
+  .note code{font-size:12px; background:var(--cap); padding:1px 5px; border-radius:2px; color:var(--ink)}
+
+  table{width:100%; border-collapse:collapse; font-size:13.5px}
+  th,td{text-align:left; padding:9px 12px; border-bottom:1px solid var(--hair); vertical-align:top}
+  th{font-size:11px; letter-spacing:.1em; text-transform:uppercase; color:var(--muted); font-weight:600}
+  td code{font-size:12px; background:var(--cap); padding:1px 6px; border-radius:2px}
+  td:first-child{white-space:nowrap; width:1%}
+  .tbl{background:var(--surface); border:1px solid var(--hair); border-radius:3px; overflow-x:auto}
+  tr:last-child td{border-bottom:none}
+
+  pre{background:var(--surface); border:1px solid var(--hair); border-left:3px solid var(--accent);
+    border-radius:3px; padding:16px 18px; overflow-x:auto; font-size:12.5px; line-height:1.7; margin:0}
+  pre .cm{color:var(--muted)}
+  .tip{background:var(--surface); border:1px solid var(--hair); border-left:3px solid var(--sys);
+    border-radius:3px; padding:15px 18px; font-size:13.5px; color:var(--ink-2)}
+  .tip + .tip{margin-top:12px}
+  .tip b{color:var(--ink)}
+  footer{margin-top:56px; padding-top:20px; border-top:1px solid var(--hair);
+    font-size:12px; color:var(--muted); font-family:"IBM Plex Mono",monospace}
+  @media (prefers-reduced-motion:reduce){*{animation:none!important; transition:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <div class="eyebrow">Referencia</div>
+  <h1>Mi layout Corne</h1>
+  <p class="sub">Cómo está repartido el teclado: cuatro capas, qué hace cada tecla y cómo llegar a cada capa. Generado a partir de <code>config/corne.keymap</code>.</p>
+  <div class="meta">
+    <span><b>board</b> nice_nano//zmk</span>
+    <span><b>shield</b> corne + nice!view gem</span>
+    <span><b>zmk</b> main</span>
+    <span><b>capas</b> 4</span>
+  </div>
+</header>
+
+<section>
+  <h2>Cómo leer las teclas</h2>
+  <div class="legend">
+    <span class="lg"><span class="sw" style="background:var(--cap); border:1px solid var(--cap-edge)"></span>letra o símbolo</span>
+    <span class="lg"><span class="sw" style="background:var(--mod)"></span>modificador</span>
+    <span class="lg"><span class="sw" style="background:var(--accent)"></span>cambio de capa</span>
+    <span class="lg"><span class="sw" style="background:var(--nav)"></span>navegación y teclas F</span>
+    <span class="lg"><span class="sw" style="background:var(--sym)"></span>número o símbolo</span>
+    <span class="lg"><span class="sw" style="background:var(--sys)"></span>sistema · BT · RGB · media</span>
+    <span class="lg"><span class="sw" style="background:var(--muted); opacity:.4"></span>▽ transparente (cae a la capa de abajo)</span>
+  </div>
+</section>
+
+<section id="layers"><h2>Las cuatro capas</h2></section>
+
+<section>
+  <h2>Chuleta rápida</h2>
+  <div class="tbl"><table>
+    <tr><th>Quiero</th><th>Cómo</th></tr>
+    <tr><td><b>Backtick</b> <code>`</code></td><td>Lower + Tab</td></tr>
+    <tr><td><b>Números</b></td><td>Lower + fila de arriba</td></tr>
+    <tr><td><b>Flechas</b></td><td>Lower + fila de inicio, en cualquiera de las dos manos</td></tr>
+    <tr><td><b>Teclas F</b></td><td>Raise + lado izquierdo</td></tr>
+    <tr><td><b>Volumen y música</b></td><td>Lower + fila de abajo derecha</td></tr>
+    <tr><td><b>Emparejar Bluetooth</b></td><td>Lower + Raise, luego <code>BT 0</code>…<code>BT 4</code> para elegir ranura</td></tr>
+    <tr><td><b>Olvidar el emparejamiento</b></td><td>Lower + Raise, luego <code>BT CLR</code> (borra solo la ranura activa)</td></tr>
+    <tr><td><b>Encender o apagar el RGB</b></td><td>Lower + Raise, luego <code>RGB</code> (arranca siempre apagado)</td></tr>
+    <tr><td><b>Cambiar entre USB y Bluetooth</b></td><td>Lower + Raise, luego <code>USB/BT</code></td></tr>
+    <tr><td><b>Entrar al bootloader</b></td><td>Lower + Raise, luego <code>BOOT</code> (esquina inferior de esa mitad)</td></tr>
+  </table></div>
+</section>
+
+<section>
+  <h2>Cómo está configurado</h2>
+  <pre><span class="cm"># Pantalla nice!view con el status screen del gem</span>
+CONFIG_ZMK_DISPLAY=y
+CONFIG_ZMK_DISPLAY_STATUS_SCREEN_CUSTOM=y
+CONFIG_ZMK_SLEEP=y
+
+<span class="cm"># Animación apagada y frame fijo, para ahorrar batería</span>
+CONFIG_NICE_VIEW_GEM_ANIMATION=n
+CONFIG_NICE_VIEW_GEM_ANIMATION_FRAME=8
+
+<span class="cm"># RGB apagado al arrancar; se enciende con RGB_TOG desde la capa Config</span>
+CONFIG_ZMK_RGB_UNDERGLOW=y
+CONFIG_WS2812_STRIP=y
+CONFIG_ZMK_RGB_UNDERGLOW_ON_START=n
+CONFIG_ZMK_RGB_UNDERGLOW_AUTO_OFF_IDLE=y
+CONFIG_ZMK_RGB_UNDERGLOW_AUTO_OFF_USB=y</pre>
+</section>
+
+<section>
+  <h2>Reflashear el firmware</h2>
+  <div class="tbl"><table>
+    <tr><th>#</th><th>Paso</th></tr>
+    <tr><td>1</td><td>Empuja los cambios y espera a que el workflow <b>Build ZMK firmware</b> termine en verde.</td></tr>
+    <tr><td>2</td><td>Baja el artefacto <code>firmware</code> del run y descomprímelo. Trae un <code>.uf2</code> por mitad.</td></tr>
+    <tr><td>3</td><td>Conecta una mitad por USB y haz <b>doble toque al botón de reset</b>. Aparece un volumen llamado <code>NICENANO</code>.</td></tr>
+    <tr><td>4</td><td>Copia el <code>.uf2</code> que corresponde a esa mitad. Se reinicia solo al terminar.</td></tr>
+    <tr><td>5</td><td>Repite con la otra mitad.</td></tr>
+  </table></div>
+  <div class="tip" style="margin-top:14px"><b>El izquierdo va al izquierdo.</b> Los dos <code>.uf2</code> no son intercambiables: el nombre del archivo dice a qué mitad pertenece. Flashear el equivocado deja esa mitad sin responder hasta que la vuelvas a flashear bien.</div>
+  <div class="tip"><b>Si cambias la definición del board o la versión de ZMK, flashea las dos mitades.</b> Dejar una mitad con firmware viejo y otra con nuevo provoca fallos de emparejamiento difíciles de diagnosticar.</div>
+</section>
+
+<footer>Generado desde config/corne.keymap · github.com/Isaakavo/zmk-config</footer>
+</div>
+
+<script>
+const K = (m, s, c) => ({m, s, c: c||""});
+const T = () => K("▽","","trans");
+const H = () => ({m:"■", s:"held", c:"", held:true});
+
+const LAYERS = [
+  {
+    n:"0", name:"Base", how:"siempre activa",
+    rows:[
+      [K("TAB"),K("Q"),K("W"),K("E"),K("R"),K("T"),  K("Y"),K("U"),K("I"),K("O"),K("P"),K("BSPC")],
+      [K("CTRL","","mod"),K("A"),K("S"),K("D"),K("F"),K("G"),  K("H"),K("J"),K("K"),K("L"),K(";"),K("'")],
+      [K("SHIFT","","mod"),K("Z"),K("X"),K("C"),K("V"),K("B"),  K("N"),K("M"),K(","),K("."),K("/"),K("ESC")],
+    ],
+    thumbs:[
+      [K("⌘","cmd / super","mod"),K("LOWER","hold","lay"),K("ENTER")],
+      [K("SPACE"),K("RAISE","hold","lay"),K("ALT","","mod")]
+    ],
+    notes:[
+      "<code>⌘</code> en el pulgar izquierdo sirve para los dos sistemas: Omarchy usa <code>SUPER+C/V/X</code> para copiar, pegar y cortar, igual que macOS.",
+      "<code>ALT</code> es Alt puro, sin capas encima. Lo necesitas sostenido para <code>Option+e</code> → <code>´</code> y <code>Option+n</code> → <code>~</code> en macOS.",
+      "Los dos pulgares interiores mantenidos a la vez abren la capa Config."
+    ]
+  },
+  {
+    n:"1", name:"Lower", how:"hold <b>pulgar izq. interior</b>",
+    rows:[
+      [K("`","backtick","sym"),K("1","","sym"),K("2","","sym"),K("3","","sym"),K("4","","sym"),K("5","","sym"),  K("6","","sym"),K("7","","sym"),K("8","","sym"),K("9","","sym"),K("0","","sym"),K("BSPC")],
+      [K("CTRL","","mod"),K("←","","nav"),K("↓","","nav"),K("↑","","nav"),K("→","","nav"),K("DEL","","nav"),  K("←","","nav"),K("↓","","nav"),K("↑","","nav"),K("→","","nav"),T(),T()],
+      [K("SHIFT","","mod"),K("HOME","","nav"),K("PGDN","","nav"),K("PGUP","","nav"),K("END","","nav"),T(),  K("VOL−","","sys"),K("VOL+","","sys"),K("MUTE","","sys"),K("PREV","","sys"),K("PLAY","","sys"),K("NEXT","","sys")],
+    ],
+    thumbs:[[K("⌘","","mod"),H(),K("ENTER")],[K("SPACE"),T(),T()]],
+    notes:[
+      "El <b>backtick</b> está en la posición de Tab: <code>Lower + Tab</code> → <code>`</code>.",
+      "Números como el Corne de fábrica: <code>1-5</code> izquierda, <code>6-0</code> derecha, todos en la fila de arriba.",
+      "<b>Flechas en las dos manos.</b> Las de la izquierda sirven cuando tienes la derecha en el mouse.",
+      "La fila de abajo derecha es el bloque de música y volumen completo, alcanzable con un solo pulgar."
+    ]
+  },
+  {
+    n:"2", name:"Raise", how:"hold <b>pulgar der. interior</b>",
+    rows:[
+      [K("TAB"),K("!","","sym"),K("@","","sym"),K("#","","sym"),K("$","","sym"),K("%","","sym"),  K("^","","sym"),K("&","","sym"),K("*","","sym"),K("(","","sym"),K(")","","sym"),K("BSPC")],
+      [K("F1","","nav"),K("F2","","nav"),K("F3","","nav"),K("F4","","nav"),K("F5","","nav"),K("F6","","nav"),  K("−","","sym"),K("=","","sym"),K("[","","sym"),K("]","","sym"),K("\\","","sym"),K("`","","sym")],
+      [K("F7","","nav"),K("F8","","nav"),K("F9","","nav"),K("F10","","nav"),K("F11","","nav"),K("F12","","nav"),  K("_","","sym"),K("+","","sym"),K("{","","sym"),K("}","","sym"),K("|","","sym"),K("~","","sym")],
+    ],
+    thumbs:[[K("⌘","","mod"),T(),K("ENTER")],[K("SPACE"),H(),T()]],
+    notes:[
+      "<b>F1–F12 ocupan el lado izquierdo entero</b>, en orden y sin huecos.",
+      "Esta capa no tiene <code>CTRL</code> ni <code>SHIFT</code> propios: los cede a las teclas F. Ambos siguen en la capa base.",
+      "Los símbolos del lado derecho son los del Corne de fábrica."
+    ]
+  },
+  {
+    n:"3", name:"Config", how:"hold <b>Lower + Raise</b> a la vez",
+    rows:[
+      [K("BT CLR","","sys"),K("BT 0","","sys"),K("BT 1","","sys"),K("BT 2","","sys"),K("BT 3","","sys"),K("BT 4","","sys"),  T(),T(),T(),T(),T(),T()],
+      [K("RGB","on/off","sys"),K("BRI−","","sys"),K("BRI+","","sys"),K("HUE−","","sys"),K("HUE+","","sys"),K("EFF","","sys"),  T(),T(),T(),T(),T(),T()],
+      [K("BOOT","","sys"),K("RESET","","sys"),K("SAT−","","sys"),K("SAT+","","sys"),K("EFF◀","","sys"),K("USB/BT","","sys"),  T(),T(),T(),T(),K("RESET","","sys"),K("BOOT","","sys")],
+    ],
+    thumbs:[[T(),H(),T()],[T(),H(),T()]],
+    notes:[
+      "<b>Bluetooth</b> arriba, <b>RGB</b> en medio, <b>sistema</b> abajo — todo bajo la mano izquierda, que es la que queda libre.",
+      "El lado derecho está vacío a propósito: la música vive en Lower, donde se alcanza con un pulgar.",
+      "<code>BOOT</code> y <code>RESET</code> están en las dos esquinas inferiores, una por mitad, para entrar al bootloader sin buscar el botón físico del PCB.",
+      "El RGB arranca apagado en cada encendido. <code>RGB</code> lo enciende, y se apaga solo cuando el teclado se duerme."
+    ]
+  }
+];
+
+const host = document.getElementById("layers");
+for (const L of LAYERS){
+  const el = document.createElement("div");
+  el.className = "layer";
+  const cls = k => "key" + (k.c ? " c-"+k.c : "") + (k.held ? " held":"");
+  const size = t => t.length>=6 ? " xs" : (t.length>=4 ? " sm" : "");
+  const cap = k => `<div class="${cls(k)}"><span class="k-main${size(k.m)}">${k.m}</span>${k.s?`<span class="k-sub">${k.s}</span>`:""}</div>`;
+  const half = (side, rows, th) => `<div class="half ${side}">
+      ${rows.map(r=>`<div class="row">${r.map(cap).join("")}</div>`).join("")}
+      <div class="thumbs">${th.map(cap).join("")}</div>
+    </div>`;
+  el.innerHTML = `
+    <div class="lhead">
+      <span class="lnum">${L.n}</span>
+      <span class="lname">${L.name}</span>
+      <span class="lhow">${L.how}</span>
+    </div>
+    <div class="scroll"><div class="board">
+      ${half("L", L.rows.map(r=>r.slice(0,6)), L.thumbs[0])}
+      ${half("R", L.rows.map(r=>r.slice(6)),  L.thumbs[1])}
+    </div></div>
+    <div class="lnotes">${L.notes.map(n=>`<div class="note"><span>${n}</span></div>`).join("")}</div>`;
+  host.appendChild(el);
+}
+</script>
+</body>
+</html>

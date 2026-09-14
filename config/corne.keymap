@@ -7,179 +7,98 @@
 #include <behaviors.dtsi>
 #include <dt-bindings/zmk/keys.h>
 #include <dt-bindings/zmk/bt.h>
+#include <dt-bindings/zmk/outputs.h>
+#include <dt-bindings/zmk/rgb.h>
 
 / {
-    /* ************************************************************************************
-     * MACROS
-     ************************************************************************************ */
-    
-    macros {
-        /* * KOTLIN LAMBDA: {  ->  }
-         * Types the structure and moves cursor back before the arrow.
-         * Final position: { | -> }
-         */
-        kt_lam: kotlin_lambda {
-            compatible = "zmk,behavior-macro";
-            #binding-cells = <0>;
-            bindings = <&kp LBRC &kp SPACE &kp SPACE &kp MINUS &kp GT &kp SPACE &kp RBRC &kp LEFT &kp LEFT &kp LEFT &kp LEFT &kp LEFT>;
-        };
-
-        /* * KOTLIN FUNCTION (IMPROVED)
-         * Types: fun () { } with a newline.
-         * Moves cursor back to naming position.
-         * Final position: fun |() { 
-         */
-        kt_fun: fun_keyword {
-            compatible = "zmk,behavior-macro";
-            #binding-cells = <0>;
-            bindings = <&kp F &kp U &kp N &kp SPACE &kp LPAR &kp RPAR &kp SPACE &kp LBRC &kp RET &kp RBRC &kp UP &kp LEFT &kp LEFT &kp LEFT &kp LEFT>;
-        };
-
-        /* JS/General Arrow: => */
-        js_arr: js_arrow {
-            compatible = "zmk,behavior-macro";
-            #binding-cells = <0>;
-            bindings = <&kp EQUAL &kp GT>;
-        };
-
-        /* Kotlin Safe Call: ?. */
-        kt_safe: safe_call {
-            compatible = "zmk,behavior-macro";
-            #binding-cells = <0>;
-            bindings = <&kp QMARK &kp DOT>;
-        };
-
-        /* Kotlin Elvis Operator: ?: */
-        kt_elvis: elvis_op {
-            compatible = "zmk,behavior-macro";
-            #binding-cells = <0>;
-            bindings = <&kp QMARK &kp COLON>;
-        };
-
-        /* Val keyword */
-        kt_val: val_keyword {
-            compatible = "zmk,behavior-macro";
-            #binding-cells = <0>;
-            bindings = <&kp V &kp A &kp L &kp SPACE>;
-        };
-        
-        /* Var keyword */
-        kt_var: var_keyword {
-            compatible = "zmk,behavior-macro";
-            #binding-cells = <0>;
-            bindings = <&kp V &kp A &kp R &kp SPACE>;
-        };
-
-        /* Git Macros */
-        git_cmt: git_commit {
-            compatible = "zmk,behavior-macro";
-            #binding-cells = <0>;
-            /* Types: git commit -m "" and places cursor inside quotes */
-            bindings = <&kp G &kp I &kp T &kp SPACE &kp C &kp O &kp M &kp M &kp I &kp T &kp SPACE &kp MINUS &kp M &kp SPACE &kp DQT &kp DQT &kp LEFT>;
-        };
-        git_st: git_status {
-            compatible = "zmk,behavior-macro";
-            #binding-cells = <0>;
-            /* Types: git status [Enter] */
-            bindings = <&kp G &kp I &kp T &kp SPACE &kp S &kp T &kp A &kp T &kp U &kp S &kp RET>;
-        };
-        git_add: git_add {
-            compatible = "zmk,behavior-macro";
-            #binding-cells = <0>;
-            /* Types: git add . [Enter] */
-            bindings = <&kp G &kp I &kp T &kp SPACE &kp A &kp D &kp D &kp SPACE &kp DOT &kp RET>;
-        };
-        git_psh: git_push {
-            compatible = "zmk,behavior-macro";
-            #binding-cells = <0>;
-            /* Types: git push [Enter] */
-            bindings = <&kp G &kp I &kp T &kp SPACE &kp P &kp U &kp S &kp H &kp RET>;
-        };
-    };
-
     conditional_layers {
         compatible = "zmk,conditional-layers";
-        /* Tri-layer: Lower + Raise = Adjust */
+        /* Tri-layer: Lower + Raise = Config */
         tri_layer {
-            if-layers = <2 3>;
-            then-layer = <4>;
+            if-layers = <1 2>;
+            then-layer = <3>;
         };
     };
 
     keymap {
         compatible = "zmk,keymap";
 
-        /* LAYER 0: DEFAULT (MAC MODE) */
+        /* LAYER 0: BASE
+         * Same layout on macOS and Omarchy: both use GUI+C/V/X to copy,
+         * paste and cut, so the left thumb GUI serves either system.
+         */
         default_layer {
+            display-name = "Base";
+// -----------------------------------------------------------------------------------------
+// | TAB  |  Q  |  W  |  E  |  R  |  T  |   |  Y  |  U  |  I  |  O  |  P  | BSPC |
+// | CTRL |  A  |  S  |  D  |  F  |  G  |   |  H  |  J  |  K  |  L  |  ;  |  '   |
+// | SHFT |  Z  |  X  |  C  |  V  |  B  |   |  N  |  M  |  ,  |  .  |  /  | ESC  |
+//                    | GUI | LWR | RET |   | SPC | RSE | ALT |
             bindings = <
                 &kp TAB    &kp Q  &kp W  &kp E  &kp R  &kp T     &kp Y  &kp U  &kp I      &kp O    &kp P     &kp BSPC
                 &kp LCTRL  &kp A  &kp S  &kp D  &kp F  &kp G     &kp H  &kp J  &kp K      &kp L    &kp SEMI  &kp SQT
                 &kp LSHFT  &kp Z  &kp X  &kp C  &kp V  &kp B     &kp N  &kp M  &kp COMMA  &kp DOT  &kp FSLH  &kp ESC
-                                  &kp LGUI &mo 2 &kp RET         &kp SPACE &mo 3 &kp RALT
+                                  &kp LGUI &mo 1 &kp RET         &kp SPACE &mo 2 &kp RALT
             >;
         };
 
-        /* LAYER 1: LINUX MODE (Swaps thumb to Ctrl) */
-        linux_layer {
-            bindings = <
-                &kp TAB    &kp Q  &kp W  &kp E  &kp R  &kp T     &kp Y  &kp U  &kp I      &kp O    &kp P     &kp BSPC
-                &kp LGUI   &kp A  &kp S  &kp D  &kp F  &kp G     &kp H  &kp J  &kp K      &kp L    &kp SEMI  &kp SQT
-                &kp LSHFT  &kp Z  &kp X  &kp C  &kp V  &kp B     &kp N  &kp M  &kp COMMA  &kp DOT  &kp FSLH  &kp ESC
-                                  &kp LCTRL &mo 2 &kp RET        &kp SPACE &mo 3 &kp RALT
-            >;
-        };
-
-        /* LAYER 2: LOWER (Navigation, Numbers & IDE Shortcuts) */
+        /* LAYER 1: LOWER (numbers, navigation & media)
+         * Backtick sits on the TAB position: Lower + Tab types `
+         * Arrows are mirrored on both halves so they stay reachable
+         * while the right hand is on the mouse.
+         */
         lower_layer {
+            display-name = "Lower";
+// -----------------------------------------------------------------------------------------
+// |  `   |  1  |  2  |  3  |  4  |  5  |   |  6   |  7   |  8   |  9   |  0   | BSPC |
+// | CTRL | LFT | DWN |  UP | RGT | DEL |   | LFT  | DWN  |  UP  | RGT  |      |      |
+// | SHFT | HOME| PGDN| PGUP| END |     |   | VOL- | VOL+ | MUTE | PREV | PLAY | NEXT |
+//                    | GUI |     | RET |   | SPC  |      |      |
             bindings = <
-                &kp TAB       &kp LG(B)    &kp LG(LBKT) &kp LG(RBKT) &kp LG(LS(F)) &trans        &kp N1   &kp N2   &kp N3   &kp N4    &kp N5 &kp BSPC
-                &trans        &trans       &trans       &trans       &trans        &trans        &kp LEFT &kp DOWN &kp UP   &kp RIGHT &trans &trans
-                &kp LSHFT     &kp HOME     &kp PG_DN    &kp PG_UP    &kp END       &trans        &kp N6   &kp N7   &kp N8   &kp N9    &kp N0 &trans
-                                           &kp LGUI     &trans       &kp RET                     &kp SPACE &trans &kp RALT
+                &kp GRAVE  &kp N1    &kp N2     &kp N3     &kp N4     &kp N5    &kp N6        &kp N7        &kp N8     &kp N9     &kp N0   &kp BSPC
+                &kp LCTRL  &kp LEFT  &kp DOWN   &kp UP     &kp RIGHT  &kp DEL   &kp LEFT      &kp DOWN      &kp UP     &kp RIGHT  &trans   &trans
+                &kp LSHFT  &kp HOME  &kp PG_DN  &kp PG_UP  &kp END    &trans    &kp C_VOL_DN  &kp C_VOL_UP  &kp C_MUTE &kp C_PREV &kp C_PP &kp C_NEXT
+                                     &kp LGUI   &trans     &kp RET              &kp SPACE     &trans        &trans
             >;
-            /* JetBrains Shortcuts (Left Hand):
-             * Q: Go to Declaration (Cmd+B)
-             * W: Back (Cmd+[)
-             * E: Forward (Cmd+])
-             * R: Find in Path (Cmd+Shift+F)
-             */
         };
 
-        /* LAYER 3: RAISE (Symbols Optimized) */
+        /* LAYER 2: RAISE (symbols & function keys)
+         * F1-F12 fill the left block exactly. This drops the CTRL/SHFT
+         * duplicates that stock keeps here; both still live on the base layer.
+         */
         raise_layer {
+            display-name = "Raise";
+// -----------------------------------------------------------------------------------------
+// | TAB |  !  |  @  |  #  |  $  |  %  |   |  ^  |  &  |  *  |  (  |  )  | BSPC |
+// | F1  | F2  | F3  | F4  | F5  | F6  |   |  -  |  =  |  [  |  ]  |  \  |  `   |
+// | F7  | F8  | F9  | F10 | F11 | F12 |   |  _  |  +  |  {  |  }  | "|" |  ~   |
+//                   | GUI |     | RET |   | SPC |     | ALT |
             bindings = <
-                &kp TAB   &kp EXCL &kp AT   &kp HASH &kp DLLR &kp PRCNT     &kp CARET &kp AMPS  &kp ASTRK &kp LPAR &kp RPAR &kp BSPC
-                &kp LCTRL &trans   &trans   &trans   &trans   &trans        &kp MINUS &kp EQUAL &kp LBKT  &kp RBKT &kp BSLH &kp GRAVE
-                &kp LSHFT &trans   &kp LBRC &kp RBRC &trans   &trans        &kp UNDER &kp PLUS  &kp LBRC  &kp RBRC &kp PIPE &kp TILDE
-                                   &kp LGUI &trans   &kp RET                &kp SPACE &trans    &kp RALT
+                &kp TAB  &kp EXCL &kp AT   &kp HASH &kp DLLR &kp PRCNT   &kp CARET &kp AMPS  &kp ASTRK &kp LPAR &kp RPAR &kp BSPC
+                &kp F1   &kp F2   &kp F3   &kp F4   &kp F5   &kp F6      &kp MINUS &kp EQUAL &kp LBKT  &kp RBKT &kp BSLH &kp GRAVE
+                &kp F7   &kp F8   &kp F9   &kp F10  &kp F11  &kp F12     &kp UNDER &kp PLUS  &kp LBRC  &kp RBRC &kp PIPE &kp TILDE
+                                  &kp LGUI &trans   &kp RET              &kp SPACE &trans    &trans
             >;
         };
 
-        /* LAYER 4: ADJUST (Code Macros, OS Switch, & Media) */
-        adjust_layer {
-            /* * Programming Optimized Layout:
-             * Top Row:    BT Controls (Moved here to clear home row)
-             * Middle Row: Kotlin/Code Macros (Left) | Media/Nav (Right)
-             * Bottom Row: OS Switch & Variables
-             */
+        /* LAYER 3: CONFIG (Lower + Raise held together)
+         * Bluetooth on top, RGB in the middle, system on the bottom.
+         * The right half is intentionally empty: media moved to Lower,
+         * where it is reachable with a single thumb.
+         */
+        config_layer {
+            display-name = "Config";
+// -----------------------------------------------------------------------------------------
+// | BTCLR | BT0  | BT1  | BT2  | BT3  | BT4  |   |  |  |  |  |      |      |
+// | RGBTOG| BRI- | BRI+ | HUE- | HUE+ | EFF  |   |  |  |  |  |      |      |
+// | BOOT  | RESET| SAT- | SAT+ | EFFR | OUT  |   |  |  |  |  |RESET | BOOT |
+//                       |      |      |      |   |  |  |  |
             bindings = <
-                &bt BT_CLR &bt BT_SEL 0 &bt BT_SEL 1 &bt BT_SEL 2 &bt BT_SEL 3 &bt BT_SEL 4   &git_st &git_add   &git_cmt   &git_psh &trans &trans
-                &trans     &kt_val      &kt_safe     &kt_lam      &kt_fun      &js_arr        &trans  &kp C_PREV &kp C_NEXT &kp C_PP &trans &trans
-                &to 0      &to 1        &kt_var      &kt_elvis    &trans       &trans         &trans  &trans     &trans     &trans   &trans &trans
-                                                     &kp LGUI     &trans       &kp RET        &kp SPACE &trans   &kp RALT
+                &bt BT_CLR       &bt BT_SEL 0     &bt BT_SEL 1     &bt BT_SEL 2     &bt BT_SEL 3     &bt BT_SEL 4     &trans &trans &trans &trans &trans      &trans
+                &rgb_ug RGB_TOG  &rgb_ug RGB_BRD  &rgb_ug RGB_BRI  &rgb_ug RGB_HUD  &rgb_ug RGB_HUI  &rgb_ug RGB_EFF  &trans &trans &trans &trans &trans      &trans
+                &bootloader      &sys_reset       &rgb_ug RGB_SAD  &rgb_ug RGB_SAI  &rgb_ug RGB_EFR  &out OUT_TOG     &trans &trans &trans &trans &sys_reset  &bootloader
+                                                  &trans           &trans           &trans                            &trans &trans &trans
             >;
-            /* * MACRO KEYMAP (Left Hand):
-             * Middle Row:
-             * S (Ring):   ?. (Safe Call)
-             * D (Middle): { -> } (Smart Lambda)
-             * F (Index):  fun () {} (Smart Function)
-             * G (Inner):  => (JS Arrow)
-             * Bottom Row:
-             * TAB: Mac Mode
-             * Q:   Linux Mode
-             * W:   var
-             * E:   ?: (Elvis)
-             */
         };
     };
 };
