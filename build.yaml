@@ -23,3 +23,7 @@ include:
     shield: corne_left nice_view_adapter nice_view_gem
   - board: nice_nano//zmk
     shield: corne_right nice_view_adapter nice_view_gem
+  # Borra los bonds de Bluetooth guardados. Flashear en ambas mitades y
+  # despues volver a flashear el firmware normal.
+  - board: nice_nano//zmk
+    shield: settings_reset

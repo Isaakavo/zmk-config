@@ -150,7 +150,7 @@
     <span class="lg"><span class="sw" style="background:var(--accent)"></span>cambio de capa</span>
     <span class="lg"><span class="sw" style="background:var(--nav)"></span>navegación y teclas F</span>
     <span class="lg"><span class="sw" style="background:var(--sym)"></span>número o símbolo</span>
-    <span class="lg"><span class="sw" style="background:var(--sys)"></span>sistema · BT · RGB · media</span>
+    <span class="lg"><span class="sw" style="background:var(--sys)"></span>sistema · BT · media</span>
     <span class="lg"><span class="sw" style="background:var(--muted); opacity:.4"></span>▽ transparente (cae a la capa de abajo)</span>
   </div>
 </section>
@@ -168,7 +168,6 @@
     <tr><td><b>Volumen y música</b></td><td>Lower + fila de abajo derecha</td></tr>
     <tr><td><b>Emparejar Bluetooth</b></td><td>Lower + Raise, luego <code>BT 0</code>…<code>BT 4</code> para elegir ranura</td></tr>
     <tr><td><b>Olvidar el emparejamiento</b></td><td>Lower + Raise, luego <code>BT CLR</code> (borra solo la ranura activa)</td></tr>
-    <tr><td><b>Encender o apagar el RGB</b></td><td>Lower + Raise, luego <code>RGB</code> (arranca siempre apagado)</td></tr>
     <tr><td><b>Cambiar entre USB y Bluetooth</b></td><td>Lower + Raise, luego <code>USB/BT</code></td></tr>
     <tr><td><b>Entrar al bootloader</b></td><td>Lower + Raise, luego <code>BOOT</code> (esquina inferior de esa mitad)</td></tr>
   </table></div>
@@ -183,17 +182,8 @@ CONFIG_ZMK_SLEEP=y
 
 <span class="cm"># Animación apagada y frame fijo, para ahorrar batería</span>
 CONFIG_NICE_VIEW_GEM_ANIMATION=n
-CONFIG_NICE_VIEW_GEM_ANIMATION_FRAME=8
+CONFIG_NICE_VIEW_GEM_ANIMATION_FRAME=8</pre>
 
-<span class="cm"># RGB apagado al arrancar; se enciende con RGB_TOG desde la capa Config</span>
-CONFIG_ZMK_RGB_UNDERGLOW=y
-CONFIG_ZMK_RGB_UNDERGLOW_ON_START=n
-CONFIG_ZMK_RGB_UNDERGLOW_AUTO_OFF_IDLE=y
-CONFIG_ZMK_RGB_UNDERGLOW_AUTO_OFF_USB=y
-
-<span class="cm"># Sin esto, apagar el RGB corta el riel VCC y la pantalla no enciende</span>
-CONFIG_ZMK_RGB_UNDERGLOW_EXT_POWER=n</pre>
-  <div class="tip" style="margin-top:14px"><b>El nice!view y los LEDs comparten el riel VCC conmutado.</b> Por defecto ZMK acopla el encendido del underglow a ese riel, asi que apagar el RGB apagaria tambien la pantalla. <code>EXT_POWER=n</code> los desacopla: el riel queda siempre alimentado y el RGB solo controla los LEDs.</div>
 </section>
 
 <section>
@@ -269,15 +259,16 @@ const LAYERS = [
     n:"3", name:"Config", how:"hold <b>Lower + Raise</b> a la vez",
     rows:[
       [K("BT CLR","","sys"),K("BT 0","","sys"),K("BT 1","","sys"),K("BT 2","","sys"),K("BT 3","","sys"),K("BT 4","","sys"),  T(),T(),T(),T(),T(),T()],
-      [K("RGB","on/off","sys"),K("BRI−","","sys"),K("BRI+","","sys"),K("HUE−","","sys"),K("HUE+","","sys"),K("EFF","","sys"),  T(),T(),T(),T(),T(),T()],
-      [K("BOOT","","sys"),K("RESET","","sys"),K("SAT−","","sys"),K("SAT+","","sys"),K("EFF◀","","sys"),K("USB/BT","","sys"),  T(),T(),T(),T(),K("RESET","","sys"),K("BOOT","","sys")],
+      [K("BT ◀","perfil","sys"),K("BT ▶","perfil","sys"),T(),T(),T(),T(),  T(),T(),T(),T(),T(),T()],
+      [K("BOOT","","sys"),K("RESET","","sys"),T(),T(),T(),K("USB/BT","","sys"),  T(),T(),T(),T(),K("RESET","","sys"),K("BOOT","","sys")],
     ],
     thumbs:[[T(),H(),T()],[T(),H(),T()]],
     notes:[
-      "<b>Bluetooth</b> arriba, <b>RGB</b> en medio, <b>sistema</b> abajo — todo bajo la mano izquierda, que es la que queda libre.",
+      "<b>Bluetooth</b> arriba, cambio de perfil en medio, <b>sistema</b> abajo — todo bajo la mano izquierda, que es la que queda libre.",
       "El lado derecho está vacío a propósito: la música vive en Lower, donde se alcanza con un pulgar.",
       "<code>BOOT</code> y <code>RESET</code> están en las dos esquinas inferiores, una por mitad, para entrar al bootloader sin buscar el botón físico del PCB.",
-      "El RGB arranca apagado en cada encendido. <code>RGB</code> lo enciende, y se apaga solo cuando el teclado se duerme."
+      "No hay controles de RGB: este Corne no lleva LEDs soldados, asi que se quito la configuracion entera en vez de dejarla arrastrando.",
+      "Quedan huecos libres en la fila de en medio y en todo el lado derecho, por si luego quieres poner algo ahi."
     ]
   }
 ];
